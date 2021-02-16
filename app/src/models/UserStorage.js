@@ -3,7 +3,7 @@
 class UserStorage {
   static #users = {
     id: ["test", "isms", "pims"],
-    psword: ["1234", "qwer", "qw12"],
+    psword: ["1234", "qwer", "1234"],
     name: ["Admin", "Audit", "Custommer"],
   };
 
@@ -16,6 +16,26 @@ class UserStorage {
       return newUsers;
     }, {});
     return newUsers;
+  }
+
+  static getUserInfo(id) {
+    const users = this.#users;
+    const idx = users.id.indexOf(id);
+    const usersKeys = Object.keys(users); // => [id, psword, name]
+    const userInfo = usersKeys.reduce((newUser, info) => {
+      newUser[info] = users[info][idx];
+      return newUser;
+    }, {});
+
+    return userInfo;
+  }
+
+  static save(userInfo) {
+    const users = this.#users;
+    users.id.push(userInfo.id);
+    users.name.push(userInfo.name);
+    users.psword.push(userInfo.psword);
+    return { success: true };
   }
 }
 
