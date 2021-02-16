@@ -1,5 +1,6 @@
 "use strict";
 
+const {response} = require("express");
 const UserStorage = require("./UserStorage");
 
 class User {
@@ -7,9 +8,9 @@ class User {
     this.body = body;
   }
 
-  login() {
+  async login() {
     const client = this.body;
-    const { id, psword } = UserStorage.getUserInfo(client.id);
+    const { id, psword } = await UserStorage.getUserInfo(client.id);
     
     if (id === client.id) {
       if (psword === client.psword) {
@@ -28,9 +29,15 @@ class User {
 
   }
 
-  register() {
+  async register() {
     const client = this.body;
-    UserStorage.save(client);
+    try {
+    const response = await UserStorage.save(client);
+    return response;
+    } catch (err) {
+      const a = {success: false, msg: err};
+      return a;
+    }
   }
 }
 
